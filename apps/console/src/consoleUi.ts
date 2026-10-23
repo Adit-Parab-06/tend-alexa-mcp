@@ -240,11 +240,11 @@ export function renderConsoleHtml(): string {
       <div class="logo-text">Tend Care Console</div>
     </div>
     <nav class="nav-tabs">
-      <button class="tab-btn active" onclick="showTab('medications')">Medications</button>
-      <button class="tab-btn" onclick="showTab('circle')">Circle & Invites</button>
-      <button class="tab-btn" onclick="showTab('notifications')">Notifications</button>
-      <button class="tab-btn" onclick="showTab('privacy')">Privacy & Data</button>
-      <button class="tab-btn" onclick="showTab('demo')">Scripted Demo</button>
+      <button class="tab-btn active" onclick="showTab('medications', this)">Medications</button>
+      <button class="tab-btn" onclick="showTab('circle', this)">Circle & Invites</button>
+      <button class="tab-btn" onclick="showTab('notifications', this)">Notifications</button>
+      <button class="tab-btn" onclick="showTab('privacy', this)">Privacy & Data</button>
+      <button class="tab-btn" onclick="showTab('demo', this)">Scripted Demo</button>
     </nav>
   </header>
 
@@ -466,11 +466,14 @@ export function renderConsoleHtml(): string {
   </div>
 
   <script>
-    function showTab(tabId) {
+    function showTab(tabId, triggerBtn) {
       document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      document.getElementById('tab-' + tabId).style.display = 'block';
-      event.target.classList.add('active');
+      const targetTab = document.getElementById('tab-' + tabId);
+      if (targetTab) targetTab.style.display = 'block';
+
+      const navBtn = triggerBtn || document.querySelector("button.tab-btn[onclick*=\"'" + tabId + "'\"]");
+      if (navBtn) navBtn.classList.add('active');
     }
 
     function addMedication() {
@@ -481,7 +484,7 @@ export function renderConsoleHtml(): string {
 
       const tbody = document.querySelector('#meds-table tbody');
       const tr = document.createElement('tr');
-      tr.innerHTML = '<td><strong>' + name + '</strong></td><td>' + dose + '</td><td><span class=\"badge\">' + slot + '</span></td><td><span class=\"badge\">Scheduled</span></td><td><button class=\"btn btn-secondary btn-sm\">Edit</button></td>';
+      tr.innerHTML = '<td><strong>' + name + '</strong></td><td>' + dose + '</td><td><span class="badge">' + slot + '</span></td><td><span class="badge">Scheduled</span></td><td><button class="btn btn-secondary btn-sm">Edit</button></td>';
       tbody.appendChild(tr);
 
       document.getElementById('new-med-name').value = '';
@@ -514,8 +517,10 @@ export function renderConsoleHtml(): string {
 
     function showOutput(msg) {
       const el = document.getElementById('demo-output');
-      el.style.display = 'block';
-      el.innerHTML += "<div>&bull; " + msg + "</div>";
+      if (el) {
+        el.style.display = 'block';
+        el.innerHTML += "<div style='margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.06);'>&bull; " + msg + "</div>";
+      }
     }
 
     function runStep1() {
@@ -533,12 +538,15 @@ export function renderConsoleHtml(): string {
     function runScriptedScenario() {
       showTab('demo');
       const el = document.getElementById('demo-output');
-      el.style.display = 'block';
-      el.innerHTML = "<strong>Executing Full Hackathon Journey:</strong><br/>";
-      runStep1();
-      setTimeout(runStep2, 400);
-      setTimeout(runStep3, 800);
-      setTimeout(runStep4, 1200);
+      if (el) {
+        el.style.display = 'block';
+        el.innerHTML = "<div style='margin-bottom:12px; font-weight:600; color:#0066cc;'>▶ Executing Live Hackathon Journey:</div>";
+        el.scrollIntoView({ behavior: 'smooth' });
+        runStep1();
+        setTimeout(runStep2, 400);
+        setTimeout(runStep3, 800);
+        setTimeout(runStep4, 1200);
+      }
     }
   </script>
 </body>
