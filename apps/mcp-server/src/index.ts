@@ -1,5 +1,7 @@
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
+import { readFileSync, existsSync } from "node:fs";
+import { resolve } from "node:path";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { TEND_VERSION, InMemoryTendRepository, type TendRepository } from "@tend/core";
 import { createTendMcpServer } from "./server.js";
@@ -70,6 +72,25 @@ export function createServerApp(options?: AppServerOptions) {
       version: TEND_VERSION,
       timestamp: new Date().toISOString(),
     });
+  });
+
+  // Serve Tend Brand Logo
+  app.get("/logo.png", (c) => {
+    const candidates = [
+      resolve(process.cwd(), "assets/logo.png"),
+      resolve(process.cwd(), "../../Tend_logo.png"),
+      resolve(process.cwd(), "Tend_logo.png"),
+      resolve(process.cwd(), "apps/mcp-server/assets/logo.png"),
+    ];
+    for (const p of candidates) {
+      if (existsSync(p)) {
+        const data = readFileSync(p);
+        c.header("Content-Type", "image/png");
+        c.header("Cache-Control", "public, max-age=86400");
+        return c.body(new Uint8Array(data).buffer as ArrayBuffer);
+      }
+    }
+    return c.text("Logo not found", 404);
   });
 
   // --- Browser Preview for Care Board UI (DESIGN.md styled) ---

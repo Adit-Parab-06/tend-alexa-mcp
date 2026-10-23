@@ -10,6 +10,7 @@ export function renderConsoleHtml(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tend Console &mdash; Family Care Circle</title>
+  <link rel="icon" type="image/png" href="/logo.png">
   <style>
     :root {
       --primary: #2997ff;
@@ -457,9 +458,9 @@ export function renderConsoleHtml(): string {
 <body>
   <header>
     <a href="#" class="logo-group">
-      <div class="logo-badge">
-        <!-- Tend Minimal Interlocking Care Circle Logo SVG -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="logo-badge" style="background: transparent; box-shadow: none; width: 38px; height: 38px; overflow: hidden; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+        <img src="/logo.png" alt="Tend Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;" onerror="this.style.display='none'; document.getElementById('logo-fallback-svg').style.display='block';" />
+        <svg id="logo-fallback-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none; width: 22px; height: 22px;">
           <circle cx="12" cy="12" r="9"/>
           <path d="M12 7v5l3 3"/>
           <path d="M7 12a5 5 0 0 1 5-5"/>
