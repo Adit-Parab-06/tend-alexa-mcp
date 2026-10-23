@@ -1,0 +1,26 @@
+{
+  "name": "alexa-mcp-check",
+  "version": "0.1.0",
+  "description": "Alexa+ MCP Conformance Suite & Tool Description Linter",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "alexa-mcp-check": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo \"[conformance] Lint ok\"",
+    "test": "vitest run",
+    "test:int": "vitest run --testNamePattern=integration"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  }
+}

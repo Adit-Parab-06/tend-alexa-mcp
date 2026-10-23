@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false
+  },
+  "include": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/conformance" },
+    { "path": "./apps/mcp-server" },
+    { "path": "./apps/console" },
+    { "path": "./infra/cdk" }
+  ]
+}

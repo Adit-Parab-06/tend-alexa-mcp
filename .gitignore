@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.turbo/
+cdk.out/
+*.tsbuildinfo
+
+# Environment and local configs
+.env
+.env*.local
+!.env.example
+
+# Logs and test artifacts
+*.log
+npm-debug.log*
+pnpm-debug.log*
+coverage/
+.vitest/
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Explicit rule: Do NOT gitignore .agent or .agents
+!.agent/
+!.agents/
