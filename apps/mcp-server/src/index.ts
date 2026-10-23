@@ -1,8 +1,10 @@
 import { Hono } from "hono";
+import { serve } from "@hono/node-server";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { TEND_VERSION, InMemoryTendRepository, type TendRepository } from "@tend/core";
 import { createTendMcpServer } from "./server.js";
 import { OAuthServer, type OAuthConfig } from "./oauth.js";
+import { renderCareBoardHtml } from "./careBoardUi.js";
 
 export interface AppServerOptions {
   repo?: TendRepository;
@@ -68,6 +70,12 @@ export function createServerApp(options?: AppServerOptions) {
       version: TEND_VERSION,
       timestamp: new Date().toISOString(),
     });
+  });
+
+  // --- Browser Preview for Care Board UI (DESIGN.md styled) ---
+  app.get("/board", async (c) => {
+    const html = await renderCareBoardHtml(defaultCircleId, repo);
+    return c.html(html);
   });
 
   // --- Public Compliance Pages (Styled to DESIGN.md) ---
@@ -220,5 +228,16 @@ export function createServerApp(options?: AppServerOptions) {
   return { app, repo, oauth };
 }
 
-export const { app } = createServerApp();
+export const { app, repo, oauth } = createServerApp();
+
+const port = Number(process.env.PORT || 3000);
+if (process.env.NODE_ENV !== "test") {
+  console.log(`[Tend MCP Server] Listening at http://localhost:${port}`);
+  console.log(`[Tend MCP Server] Live Care Board: http://localhost:${port}/board`);
+  console.log(`[Tend MCP Server] Health: http://localhost:${port}/health`);
+  console.log(`[Tend MCP Server] Streamable HTTP: http://localhost:${port}/mcp`);
+  serve({ fetch: app.fetch, port });
+}
+
 export default app;
+
