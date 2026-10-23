@@ -631,6 +631,24 @@ export function renderConsoleHtml(): string {
       }
     }
 
+    function runCaregiverReminder(cb) {
+      playStep(
+        "Remind Mom to take her pills.",
+        "I have scheduled a gentle reminder for Margaret's medications and updated the family care board.",
+        '<strong>[VOICE]</strong> &ldquo;Remind Mom to take her pills.&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;I&rsquo;ve scheduled a gentle reminder for Margaret&rsquo;s medications and updated the family care board.&rdquo;',
+        cb
+      );
+    }
+
+    function runCheckMomPills(cb) {
+      playStep(
+        "Did Mom take her pills?",
+        "Checking Margaret's schedule: Margaret took her morning Lisinopril today. Her evening Metoprolol is scheduled for 8 PM.",
+        '<strong>[VOICE]</strong> &ldquo;Did Mom take her pills?&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;Checking Margaret&rsquo;s schedule: Margaret took her morning Lisinopril today. Her evening Metoprolol is scheduled for 8 PM.&rdquo;',
+        cb
+      );
+    }
+
     function startMicRecognition() {
       var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
@@ -657,16 +675,24 @@ export function renderConsoleHtml(): string {
           }, 3500);
         }
         showTab('demo');
-        if (transcript.indexOf('pill') !== -1 || transcript.indexOf('med') !== -1) {
+
+        // Intelligent Voice Intent Routing
+        if (transcript.indexOf('remind') !== -1) {
+          runCaregiverReminder();
+        } else if (transcript.indexOf('did mom') !== -1 || transcript.indexOf('has mom') !== -1 || (transcript.indexOf('check') !== -1 && transcript.indexOf('pill') !== -1)) {
+          runCheckMomPills();
+        } else if (transcript.indexOf('took') !== -1 || transcript.indexOf('taking') !== -1 || (transcript.indexOf('pill') !== -1 && transcript.indexOf('i ') !== -1)) {
           runStep1();
-        } else if (transcript.indexOf('fine') !== -1 || transcript.indexOf('check') !== -1) {
+        } else if (transcript.indexOf('fine') !== -1 || transcript.indexOf('okay') !== -1 || transcript.indexOf('good') !== -1 || transcript.indexOf('check in') !== -1) {
           runStep2();
-        } else if (transcript.indexOf('mom') !== -1 || transcript.indexOf('update') !== -1 || transcript.indexOf('how') !== -1) {
+        } else if (transcript.indexOf('mom') !== -1 || transcript.indexOf('update') !== -1 || transcript.indexOf('how') !== -1 || transcript.indexOf('briefing') !== -1) {
           runStep3();
-        } else if (transcript.indexOf('task') !== -1 || transcript.indexOf('claim') !== -1 || transcript.indexOf('prescription') !== -1) {
+        } else if (transcript.indexOf('task') !== -1 || transcript.indexOf('claim') !== -1 || transcript.indexOf('prescription') !== -1 || transcript.indexOf('refill') !== -1) {
           runStep4();
+        } else if (transcript.indexOf('pill') !== -1 || transcript.indexOf('med') !== -1) {
+          runStep1();
         } else {
-          showOutput('<strong>[MIC DETECTED]</strong> &ldquo;' + transcript + '&rdquo; (Try saying: "I took my pills", "I am fine", "How is Mom", or "Claim task")');
+          showOutput('<strong>[MIC DETECTED]</strong> &ldquo;' + transcript + '&rdquo; (Try saying: "Remind mom to take pills", "Did mom take her pills?", "I took my pills", "How is Mom", or "Claim task")');
         }
       };
       rec.onerror = function() {
