@@ -175,9 +175,15 @@ importers:
 
   apps/console:
     dependencies:
+      '@hono/node-server':
+        specifier: ^1.13.8
+        version: 1.19.17(hono@4.13.13)
       '@tend/core':
         specifier: workspace:*
         version: link:../../packages/core
+      hono:
+        specifier: ^4.7.2
+        version: 4.13.13
     devDependencies:
       typescript:
         specifier: ^5.7.3
