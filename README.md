@@ -21,15 +21,23 @@ Tend is an ambient, voice-first family care circle living inside Alexa+, enginee
 
 ## Codebase Architecture & MCP SDK References
 
-As required by the Alexa+ hackathon criteria, the Model Context Protocol SDK is directly integrated:
+As required by the Alexa+ hackathon criteria, the official `@modelcontextprotocol/sdk` is directly integrated and utilized:
 
-- **Server Entrypoint:** [`apps/mcp-server/src/index.ts`](./apps/mcp-server/src/index.ts)
-- **MCP Protocol & Tools:** [`apps/mcp-server/src/server.ts`](./apps/mcp-server/src/server.ts)
+- **Official MCP SDK Server Import:** [`apps/mcp-server/src/server.ts`](./apps/mcp-server/src/server.ts#L1)  
+  `import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";`
+- **Streamable HTTP Stateless Transport:** [`apps/mcp-server/src/index.ts`](./apps/mcp-server/src/index.ts#L2)  
+  `import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";`
+- **Server Initialization & Capabilities:** [`apps/mcp-server/src/server.ts`](./apps/mcp-server/src/server.ts#L22-L33)  
+  Initializes `McpServer` declaring `tools` and `resources` capabilities for specification version `2025-11-25`.
+- **Tool Registrations:** [`apps/mcp-server/src/server.ts`](./apps/mcp-server/src/server.ts#L36-L230)  
+  Registers all 8 voice tools with Zod input schemas and spoken response envelopes.
+- **MCP App Multimodal Resource:** [`apps/mcp-server/src/server.ts`](./apps/mcp-server/src/server.ts#L232-L255)  
+  Registers `ui://tend/care-board` resource rendering interactive care board HTML.
 - **OAuth 2.1 & RFC 9728 Handlers:** [`apps/mcp-server/src/oauth.ts`](./apps/mcp-server/src/oauth.ts)
 - **Core Domain & Repositories:** [`packages/core/src/index.ts`](./packages/core/src/index.ts)
-- **Conformance Test Suite:** [`packages/conformance/src/cli.ts`](./packages/conformance/src/cli.ts)
-- **AWS CDK Infrastructure:** [`infra/cdk/src/index.ts`](./infra/cdk/src/index.ts)
-- **Care Console UI:** [`apps/console/src/index.ts`](./apps/console/src/index.ts)
+- **Open Source Conformance CLI:** [`packages/conformance/src/cli.ts`](./packages/conformance/src/cli.ts)
+- **AWS CDK v2 Infrastructure:** [`infra/cdk/src/index.ts`](./infra/cdk/src/index.ts)
+- **Care Console UI Application:** [`apps/console/src/index.ts`](./apps/console/src/index.ts)
 
 ---
 

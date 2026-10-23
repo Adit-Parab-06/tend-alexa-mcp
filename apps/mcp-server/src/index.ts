@@ -172,6 +172,34 @@ export function createServerApp(options?: AppServerOptions) {
     return c.json({ error: result.error, error_description: result.error_description }, result.status as any);
   });
 
+  // --- Security Hardening: Body Size Limits & Rate Limiting ---
+  const MAX_BODY_BYTES = 100 * 1024; // 100 KB limit for JSON-RPC payloads
+  const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+  app.use("/mcp", async (c, next) => {
+    const contentLength = Number(c.req.header("content-length") || 0);
+    if (contentLength > MAX_BODY_BYTES) {
+      return c.text("Payload Too Large: Exceeds 100KB limit", 413);
+    }
+
+    const ip = c.req.header("x-forwarded-for") || "local";
+    const now = Date.now();
+    const entry = rateLimitMap.get(ip) || { count: 0, resetTime: now + 10000 };
+    if (now > entry.resetTime) {
+      entry.count = 0;
+      entry.resetTime = now + 10000;
+    }
+    entry.count++;
+    rateLimitMap.set(ip, entry);
+
+    if (entry.count > 500) {
+      c.header("Retry-After", "5");
+      return c.text("Too Many Requests: Rate limit exceeded", 429);
+    }
+
+    await next();
+  });
+
   // --- Protected Streamable HTTP /mcp endpoint ---
   // Guarded by OAuth middleware: unauthenticated requests return bare 401 (NO WWW-Authenticate header)
   app.use("/mcp", oauth.createAuthMiddleware());
