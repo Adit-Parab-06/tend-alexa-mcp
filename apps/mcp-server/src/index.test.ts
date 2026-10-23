@@ -4,10 +4,16 @@ import { InMemoryTendRepository } from "@tend/core";
 
 describe("Tend MCP Server Core & Tool Invocation", () => {
   let serverInstance: ReturnType<typeof createServerApp>;
+  let validToken: string;
 
   beforeEach(() => {
     const repo = new InMemoryTendRepository(true);
     serverInstance = createServerApp({ repo, defaultCircleId: "circle-tend-dev" });
+    validToken = serverInstance.oauth.signJwt({
+      sub: "member-elena",
+      circleId: "circle-tend-dev",
+      aud: "https://tend.care/mcp",
+    });
   });
 
   // Helper to send JSON-RPC requests over Streamable HTTP POST /mcp
@@ -17,6 +23,7 @@ describe("Tend MCP Server Core & Tool Invocation", () => {
       headers: {
         "content-type": "application/json",
         accept: "application/json, text/event-stream",
+        authorization: `Bearer ${validToken}`,
         "x-request-id": `test-rpc-${id}`,
       },
       body: JSON.stringify({
