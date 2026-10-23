@@ -423,40 +423,51 @@ export function renderConsoleHtml(): string {
     <!-- TAB 5: Scripted Demo -->
     <div id="tab-demo" class="tab-content" style="display: none;">
       <div class="card">
-        <h2 class="card-title">Interactive Hackathon Demo Scenario</h2>
-        <p class="card-desc">Execute each step of the hackathon demonstration live to observe state mutations across voice and visual interfaces.</p>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+          <div>
+            <h2 class="card-title">Interactive Voice &amp; Demo Scenario</h2>
+            <p class="card-desc">Execute each step of the hackathon demonstration live with real-time Speech Synthesis (voice output) and Microphone input.</p>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; cursor: pointer; background: var(--canvas-parchment); padding: 6px 12px; border-radius: 980px; border: 1px solid var(--hairline);">
+              <input type="checkbox" id="voice-audio-toggle" checked style="accent-color: var(--primary);">
+              <span>🔊 Voice Audio (TTS)</span>
+            </label>
+            <button id="mic-btn" class="btn btn-secondary btn-sm" onclick="startMicRecognition()">🎤 Speak Live via Mic</button>
+          </div>
+        </div>
 
         <div style="display: flex; flex-direction: column; gap: 12px;">
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--hairline); border-radius: 10px;">
             <div>
               <strong>Step 1: Elder Morning Meds</strong><br/>
-              <small style="color: var(--ink-muted);">Utterance: "Alexa, tell Tend I took my morning pills."</small>
+              <small style="color: var(--ink-muted);">Utterance: &ldquo;Alexa, tell Tend I took my morning pills.&rdquo;</small>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="runStep1()">Execute Step 1</button>
+            <button class="btn btn-secondary btn-sm" onclick="runStep1()">Execute &amp; Speak Step 1</button>
           </div>
 
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--hairline); border-radius: 10px;">
             <div>
               <strong>Step 2: Elder Routine Check-In</strong><br/>
-              <small style="color: var(--ink-muted);">Utterance: "Alexa, tell Tend I'm fine."</small>
+              <small style="color: var(--ink-muted);">Utterance: &ldquo;Alexa, tell Tend I&rsquo;m fine.&rdquo;</small>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="runStep2()">Execute Step 2</button>
+            <button class="btn btn-secondary btn-sm" onclick="runStep2()">Execute &amp; Speak Step 2</button>
           </div>
 
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--hairline); border-radius: 10px;">
             <div>
               <strong>Step 3: Caregiver Daily Briefing</strong><br/>
-              <small style="color: var(--ink-muted);">Utterance: "Alexa, how's Mom doing today?"</small>
+              <small style="color: var(--ink-muted);">Utterance: &ldquo;Alexa, how&rsquo;s Mom doing today?&rdquo;</small>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="runStep3()">Execute Step 3</button>
+            <button class="btn btn-secondary btn-sm" onclick="runStep3()">Execute &amp; Speak Step 3</button>
           </div>
 
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--hairline); border-radius: 10px;">
             <div>
               <strong>Step 4: Sibling Task Claiming</strong><br/>
-              <small style="color: var(--ink-muted);">Utterance: "Alexa, tell Tend to claim the prescription task."</small>
+              <small style="color: var(--ink-muted);">Utterance: &ldquo;Alexa, tell Tend to claim the prescription task.&rdquo;</small>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="runStep4()">Execute Step 4</button>
+            <button class="btn btn-secondary btn-sm" onclick="runStep4()">Execute &amp; Speak Step 4</button>
           </div>
         </div>
 
@@ -522,21 +533,77 @@ export function renderConsoleHtml(): string {
       var el = document.getElementById('demo-output');
       if (el) {
         el.style.display = 'block';
-        el.innerHTML += "<div style='margin-bottom: 10px; padding: 10px; background: #ffffff; border-radius: 8px; border: 1px solid #e0e0e0;'>&bull; " + msg + "</div>";
+        el.innerHTML += "<div style='margin-bottom: 10px; padding: 12px; background: #ffffff; border-radius: 8px; border: 1px solid #e0e0e0; box-shadow: 0 1px 3px rgba(0,0,0,0.03);'>&bull; " + msg + "</div>";
       }
     }
 
-    function runStep1() {
-      showOutput('<strong>[VOICE]</strong> &ldquo;Alexa, tell Tend I took my morning pills.&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;I&rsquo;ve logged your morning medication as taken for today. Have a wonderful day.&rdquo;');
+    function speakAudio(text, isAlexa, callback) {
+      var chk = document.getElementById('voice-audio-toggle');
+      if (chk && !chk.checked) {
+        if (callback) callback();
+        return;
+      }
+      if (!('speechSynthesis' in window)) {
+        if (callback) callback();
+        return;
+      }
+      try {
+        var u = new SpeechSynthesisUtterance(text);
+        u.rate = 1.0;
+        u.pitch = isAlexa ? 1.15 : 0.95;
+        if (callback) {
+          u.onend = function() { callback(); };
+          u.onerror = function() { callback(); };
+        }
+        window.speechSynthesis.speak(u);
+      } catch (err) {
+        if (callback) callback();
+      }
     }
-    function runStep2() {
-      showOutput('<strong>[VOICE]</strong> &ldquo;Alexa, tell Tend I&rsquo;m fine.&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;Thank you for checking in. I&rsquo;ve let your family care circle know you are doing fine today.&rdquo;');
+
+    function playStep(userText, spokenText, htmlSnippet, onComplete) {
+      showOutput(htmlSnippet);
+      speakAudio(userText, false, function() {
+        setTimeout(function() {
+          speakAudio(spokenText, true, onComplete);
+        }, 350);
+      });
     }
-    function runStep3() {
-      showOutput('<strong>[VOICE]</strong> &ldquo;Alexa, how&rsquo;s Mom doing today?&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;Here is Margaret&rsquo;s update: Margaret&rsquo;s pills are taken. Margaret checked in and is doing fine. There is 1 open care task, and an appointment: Dr. Chen Cardiology Follow-up.&rdquo;');
+
+    function runStep1(cb) {
+      playStep(
+        'Alexa, tell Tend I took my morning pills.',
+        'I have logged your morning medication as taken for today. Have a wonderful day.',
+        '<strong>[VOICE]</strong> &ldquo;Alexa, tell Tend I took my morning pills.&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;I&rsquo;ve logged your morning medication as taken for today. Have a wonderful day.&rdquo;',
+        cb
+      );
     }
-    function runStep4() {
-      showOutput('<strong>[VOICE]</strong> &ldquo;Alexa, tell Tend to claim the prescription task.&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;You have claimed the task: Pick up blood pressure medication refill at CVS. The family care board has been updated.&rdquo;');
+
+    function runStep2(cb) {
+      playStep(
+        'Alexa, tell Tend I am fine.',
+        'Thank you for checking in. I have let your family care circle know you are doing fine today.',
+        '<strong>[VOICE]</strong> &ldquo;Alexa, tell Tend I&rsquo;m fine.&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;Thank you for checking in. I&rsquo;ve let your family care circle know you are doing fine today.&rdquo;',
+        cb
+      );
+    }
+
+    function runStep3(cb) {
+      playStep(
+        'Alexa, how is Mom doing today?',
+        "Here is Margaret's update: Margaret's pills are taken. Margaret checked in and is doing fine. There is 1 open care task, and an appointment: Dr. Chen Cardiology Follow-up.",
+        '<strong>[VOICE]</strong> &ldquo;Alexa, how&rsquo;s Mom doing today?&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;Here is Margaret&rsquo;s update: Margaret&rsquo;s pills are taken. Margaret checked in and is doing fine. There is 1 open care task, and an appointment: Dr. Chen Cardiology Follow-up.&rdquo;',
+        cb
+      );
+    }
+
+    function runStep4(cb) {
+      playStep(
+        'Alexa, tell Tend to claim the prescription task.',
+        'You have claimed the task: Pick up blood pressure medication refill at CVS. The family care board has been updated.',
+        '<strong>[VOICE]</strong> &ldquo;Alexa, tell Tend to claim the prescription task.&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;You have claimed the task: Pick up blood pressure medication refill at CVS. The family care board has been updated.&rdquo;',
+        cb
+      );
     }
 
     function runScriptedScenario() {
@@ -544,13 +611,72 @@ export function renderConsoleHtml(): string {
       var el = document.getElementById('demo-output');
       if (el) {
         el.style.display = 'block';
-        el.innerHTML = '<div style="margin-bottom:12px; font-weight:600; color:#0066cc;">&#9654; Executing Live Hackathon Journey:</div>';
+        el.innerHTML = '<div style="margin-bottom:12px; font-weight:600; color:#0066cc;">&#9654; Executing Live Spoken Voice Journey:</div>';
         el.scrollIntoView({ behavior: 'smooth' });
-        runStep1();
-        setTimeout(runStep2, 500);
-        setTimeout(runStep3, 1000);
-        setTimeout(runStep4, 1500);
+        runStep1(function() {
+          setTimeout(function() {
+            runStep2(function() {
+              setTimeout(function() {
+                runStep3(function() {
+                  setTimeout(function() {
+                    runStep4(function() {
+                      showOutput('<strong>[DEMO COMPLETE]</strong> All 4 voice steps executed and synchronized with Alexa+ Care Board.');
+                    });
+                  }, 800);
+                });
+              }, 800);
+            });
+          }, 800);
+        });
       }
+    }
+
+    function startMicRecognition() {
+      var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert('Live microphone input is not supported in this browser. Please use Google Chrome or Microsoft Edge.');
+        return;
+      }
+      var micBtn = document.getElementById('mic-btn');
+      if (micBtn) {
+        micBtn.innerText = 'Listening... Speak now!';
+        micBtn.style.background = '#ffebeb';
+        micBtn.style.color = '#ff3b30';
+      }
+      var rec = new SpeechRecognition();
+      rec.lang = 'en-US';
+      rec.interimResults = false;
+      rec.onresult = function(event) {
+        var transcript = event.results[0][0].transcript.toLowerCase();
+        if (micBtn) {
+          micBtn.innerText = 'Heard: "' + transcript + '"';
+          setTimeout(function() {
+            micBtn.innerText = '🎤 Speak Live via Mic';
+            micBtn.style.background = '';
+            micBtn.style.color = '';
+          }, 3500);
+        }
+        showTab('demo');
+        if (transcript.indexOf('pill') !== -1 || transcript.indexOf('med') !== -1) {
+          runStep1();
+        } else if (transcript.indexOf('fine') !== -1 || transcript.indexOf('check') !== -1) {
+          runStep2();
+        } else if (transcript.indexOf('mom') !== -1 || transcript.indexOf('update') !== -1 || transcript.indexOf('how') !== -1) {
+          runStep3();
+        } else if (transcript.indexOf('task') !== -1 || transcript.indexOf('claim') !== -1 || transcript.indexOf('prescription') !== -1) {
+          runStep4();
+        } else {
+          showOutput('<strong>[MIC DETECTED]</strong> &ldquo;' + transcript + '&rdquo; (Try saying: "I took my pills", "I am fine", "How is Mom", or "Claim task")');
+        }
+      };
+      rec.onerror = function() {
+        if (micBtn) {
+          micBtn.innerText = '🎤 Speak Live via Mic';
+          micBtn.style.background = '';
+          micBtn.style.color = '';
+        }
+      };
+      rec.start();
     }
   </script>
 </body>
