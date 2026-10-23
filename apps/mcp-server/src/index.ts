@@ -70,6 +70,60 @@ export function createServerApp(options?: AppServerOptions) {
     });
   });
 
+  // --- Public Compliance Pages (Styled to DESIGN.md) ---
+  app.get("/privacy", (c) => {
+    return c.html(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><title>Tend — Privacy Policy</title>
+  <style>
+    body { font-family: "SF Pro Text", system-ui, sans-serif; background: #f5f5f7; color: #1d1d1f; padding: 40px 20px; line-height: 1.6; }
+    .card { max-width: 700px; margin: 0 auto; background: #fff; border-radius: 18px; padding: 36px; border: 1px solid #e0e0e0; }
+    h1 { font-family: "SF Pro Display", system-ui, sans-serif; font-size: 28px; margin-bottom: 16px; color: #0066cc; }
+    h2 { font-size: 18px; margin: 20px 0 8px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Tend Privacy Policy</h1>
+    <p>Last updated: October 2026</p>
+    <h2>1. Data Collection & Purpose</h2>
+    <p>Tend collects only information necessary for care circle coordination: elder first names, scheduled medication slots, routine check-ins, and shared family care tasks.</p>
+    <h2>2. Data Protection</h2>
+    <p>All data is bound cryptographically to your authenticated circle via OAuth 2.1 tokens. We do not sell or share health coordination records with third parties.</p>
+    <h2>3. Deletion Rights</h2>
+    <p>Care circles can request full record deletion at any time by contacting support or using the Tend Console.</p>
+  </div>
+</body></html>`);
+  });
+
+  app.get("/terms", (c) => {
+    return c.html(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><title>Tend — Terms of Use</title>
+  <style>
+    body { font-family: "SF Pro Text", system-ui, sans-serif; background: #f5f5f7; color: #1d1d1f; padding: 40px 20px; line-height: 1.6; }
+    .card { max-width: 700px; margin: 0 auto; background: #fff; border-radius: 18px; padding: 36px; border: 1px solid #e0e0e0; }
+    h1 { font-family: "SF Pro Display", system-ui, sans-serif; font-size: 28px; margin-bottom: 16px; color: #0066cc; }
+    h2 { font-size: 18px; margin: 20px 0 8px; }
+    .alert { background: #fff3cd; border-left: 4px solid #ff9500; padding: 12px; margin: 16px 0; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Tend Terms of Use</h1>
+    <div class="alert">
+      <strong>Important Medical Disclaimer:</strong> Tend is an ambient care coordination and communication aid. Tend is NOT a medical device, does not provide medical diagnoses or dosing instructions, and MUST NOT be used for medical emergencies.
+    </div>
+    <h2>1. Use of Service</h2>
+    <p>Tend facilitates communication and task coordination among authorized family members and caregivers.</p>
+    <h2>2. User Responsibilities</h2>
+    <p>Users must verify critical medication regimens with healthcare providers and independent prescription labels.</p>
+  </div>
+</body></html>`);
+  });
+
   // --- RFC 9728 Protected Resource Metadata (PRM) ---
   app.get("/.well-known/oauth-protected-resource", (c) => {
     return c.json(oauth.getProtectedResourceMetadata());

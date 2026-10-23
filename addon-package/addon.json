@@ -1,0 +1,53 @@
+{
+  "$schema": "https://developer.amazon.com/schemas/alexaplus/addon-v1.json",
+  "name": "Tend - Family Care Circle",
+  "shortDescription": "Voice-first family care circle for Alexa+, coordinating medication logging, check-ins, tasks, and daily spoken briefings.",
+  "fullDescription": "Tend is an ambient, voice-first family care circle living inside Alexa+, engineered specifically for families supporting an aging parent. Without requiring parents to adopt complex smartphone apps, Tend empowers elders to log routines hands-free and allows adult children to stay informed through actionable spoken briefings.\n\nKey Capabilities:\n1. Elder Voice Logging: Elders can speak naturally to their Echo devices in the kitchen or bedroom to log scheduled medication doses or confirm daily check-ins.\n2. Spoken Daily Briefings: Family caregivers can ask Alexa how Mom is doing at any time to hear an empathetic, deterministic summary of medications, well-being, open tasks, and appointments.\n3. Shared Sibling Coordination: Keep siblings and family members aligned with a synchronized care task board that prevents duplicate calls and forgotten pharmacy refills.\n4. Screen-Enabled Care Board: On Echo Show and Alexa+ screen devices, Tend renders an interactive, glanceable Care Board via the official MCP App standard.\n5. Privacy & Safety First: Tend coordinates family care and does not provide clinical diagnoses, dosing adjustments, or emergency medical dispatch.",
+  "category": "ORGANIZATION_AND_PRODUCTIVITY",
+  "examplePhrases": [
+    "Alexa, tell Tend I took my morning pills.",
+    "Alexa, ask Tend how Mom is doing today.",
+    "Alexa, ask Tend what care tasks are open.",
+    "Alexa, tell Tend to add a note: Mom's knee is feeling better."
+  ],
+  "privacyPolicyUrl": "https://tend.care/privacy",
+  "termsOfUseUrl": "https://tend.care/terms",
+  "mediaAssets": {
+    "icons": {
+      "light": {
+        "size64": "./assets/icon-64.png",
+        "size72": "./assets/icon-72.png",
+        "size88": "./assets/icon-88.png",
+        "size126": "./assets/icon-126.png",
+        "size180": "./assets/icon-180.png",
+        "size241": "./assets/icon-241.png"
+      }
+    },
+    "carouselImage": {
+      "width600Height900": "./assets/carousel-600x900.png"
+    }
+  },
+  "mcpServer": {
+    "transport": "streamable_http",
+    "endpoint": "https://tend.care/mcp",
+    "protocolVersion": "2025-11-25",
+    "auth": {
+      "type": "oauth2",
+      "grantType": "authorization_code",
+      "pkceMethod": "S256",
+      "resourceIndicator": "https://tend.care/mcp",
+      "authorizationEndpoint": "https://tend.care/oauth/authorize",
+      "tokenEndpoint": "https://tend.care/oauth/token"
+    }
+  },
+  "mcpApps": [
+    {
+      "id": "care-board",
+      "uri": "ui://tend/care-board",
+      "title": "Tend Care Board",
+      "description": "Glanceable family care circle status card for Echo Show devices.",
+      "displayModes": ["inline", "fullscreen"],
+      "defaultDisplayMode": "inline"
+    }
+  ]
+}
