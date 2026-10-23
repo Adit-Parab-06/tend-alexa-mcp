@@ -45,30 +45,30 @@ As required by the Alexa+ hackathon criteria, the official `@modelcontextprotoco
 
 ---
 
-## Monorepo Setup & Verification
+## Monorepo Setup & Quickstart
 
-Tend uses `pnpm` workspaces:
+Tend uses `pnpm` workspaces (Node 22+ recommended):
 
 ```bash
-# Install dependencies across all packages
+# 1. Install dependencies across all packages
 pnpm install
 
-# Run complete typechecking across workspaces
-pnpm typecheck
-
-# Run linter
-pnpm lint
-
-# Run all unit and contract tests
-pnpm test
-
-# Run complete verification gate (typecheck + lint + test + conformance)
+# 2. Run complete verification gate (typecheck + lint + test + conformance)
 pnpm verify
+
+# 3. Start Tend MCP Server & Echo Show Care Board (Terminal 1)
+pnpm --filter @tend/mcp-server start
+# -> Listening at http://localhost:3000
+# -> Live Care Board: http://localhost:3000/board
+# -> Streamable HTTP: http://localhost:3000/mcp
+
+# 4. Start Tend Care Console UI (Terminal 2)
+pnpm --filter @tend/console start
+# -> Running at http://localhost:3001
 ```
 
 ---
 
 ## License
 
-- Core Tend Application: Proprietary (see [`LICENSE`](./LICENSE))
-- Alexa+ MCP Conformance Harness: Apache-2.0 (see [`packages/conformance/LICENSE`](./packages/conformance/LICENSE))
+Tend is open-source software licensed under the [Apache License, Version 2.0](./LICENSE).

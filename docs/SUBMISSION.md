@@ -80,11 +80,13 @@ Detailed developer experience journal maintained in [`FRICTION.md`](../FRICTION.
 
 ---
 
-## 6. Private Repo Collaborator Access Checklist
-If the repository is private during judging, confirm that the following reviewers have been invited:
-- [x] `knmeiss`
-- [x] `giolaq`
-- [x] `anishamalde`
-- [x] `mosesroth`
-- [x] `emersonsklar`
-- [x] `testing@devpost.com`
+## 6. Repository Access & License Checklist
+- **If Public Repository:** Standard Apache 2.0 license file is included at [`LICENSE`](../LICENSE) (auto-detectable by GitHub in About section).
+- **If Private Repository:** Confirm that all hackathon reviewers and Devpost testing accounts have been invited as collaborators:
+  - [x] `AmazonAppDev` (Official Amazon Developer Reviewers)
+  - [x] `testing@devpost.com` (Devpost Testing & Verification)
+  - [x] `knmeiss`
+  - [x] `giolaq`
+  - [x] `anishamalde`
+  - [x] `mosesroth`
+  - [x] `emersonsklar`
