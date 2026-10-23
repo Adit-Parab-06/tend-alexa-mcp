@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.png" width="128" alt="Tend Logo" style="border-radius: 24px;" />
+</p>
+
 # Tend — Voice-First Family Care Circle for Alexa+
 
 > **Amazon Developer Hackathon (Build, Ship, Shape)**  

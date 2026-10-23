@@ -11,6 +11,9 @@ const app = new Hono();
 function getLogoBuffer(): Buffer | null {
   const candidates = [
     resolve(__dirname, "../assets/logo.png"),
+    resolve(process.cwd(), "assets/logo.png"),
+    resolve(process.cwd(), "logo.png"),
+    resolve(process.cwd(), "../../logo.png"),
     resolve(process.cwd(), "Tend_logo.png"),
     resolve(process.cwd(), "apps/console/assets/logo.png"),
   ];

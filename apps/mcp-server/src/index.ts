@@ -78,6 +78,8 @@ export function createServerApp(options?: AppServerOptions) {
   app.get("/logo.png", (c) => {
     const candidates = [
       resolve(process.cwd(), "assets/logo.png"),
+      resolve(process.cwd(), "logo.png"),
+      resolve(process.cwd(), "../../logo.png"),
       resolve(process.cwd(), "../../Tend_logo.png"),
       resolve(process.cwd(), "Tend_logo.png"),
       resolve(process.cwd(), "apps/mcp-server/assets/logo.png"),
