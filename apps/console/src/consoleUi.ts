@@ -240,11 +240,11 @@ export function renderConsoleHtml(): string {
       <div class="logo-text">Tend Care Console</div>
     </div>
     <nav class="nav-tabs">
-      <button class="tab-btn active" onclick="showTab('medications', this)">Medications</button>
-      <button class="tab-btn" onclick="showTab('circle', this)">Circle & Invites</button>
-      <button class="tab-btn" onclick="showTab('notifications', this)">Notifications</button>
-      <button class="tab-btn" onclick="showTab('privacy', this)">Privacy & Data</button>
-      <button class="tab-btn" onclick="showTab('demo', this)">Scripted Demo</button>
+      <button id="tab-btn-medications" class="tab-btn active" onclick="showTab('medications', this)">Medications</button>
+      <button id="tab-btn-circle" class="tab-btn" onclick="showTab('circle', this)">Circle &amp; Invites</button>
+      <button id="tab-btn-notifications" class="tab-btn" onclick="showTab('notifications', this)">Notifications</button>
+      <button id="tab-btn-privacy" class="tab-btn" onclick="showTab('privacy', this)">Privacy &amp; Data</button>
+      <button id="tab-btn-demo" class="tab-btn" onclick="showTab('demo', this)">Scripted Demo</button>
     </nav>
   </header>
 
@@ -467,23 +467,26 @@ export function renderConsoleHtml(): string {
 
   <script>
     function showTab(tabId, triggerBtn) {
-      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      const targetTab = document.getElementById('tab-' + tabId);
-      if (targetTab) targetTab.style.display = 'block';
-
-      const navBtn = triggerBtn || document.querySelector("button.tab-btn[onclick*=\"'" + tabId + "'\"]");
-      if (navBtn) navBtn.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(function(el) { el.style.display = 'none'; });
+      document.querySelectorAll('.tab-btn').forEach(function(el) { el.classList.remove('active'); });
+      var targetTab = document.getElementById('tab-' + tabId);
+      if (targetTab) {
+        targetTab.style.display = 'block';
+      }
+      var navBtn = triggerBtn || document.getElementById('tab-btn-' + tabId);
+      if (navBtn) {
+        navBtn.classList.add('active');
+      }
     }
 
     function addMedication() {
-      const name = document.getElementById('new-med-name').value;
-      const dose = document.getElementById('new-med-dose').value;
-      const slot = document.getElementById('new-med-slot').value;
+      var name = document.getElementById('new-med-name').value;
+      var dose = document.getElementById('new-med-dose').value;
+      var slot = document.getElementById('new-med-slot').value;
       if (!name) return alert('Please enter medication name');
 
-      const tbody = document.querySelector('#meds-table tbody');
-      const tr = document.createElement('tr');
+      var tbody = document.querySelector('#meds-table tbody');
+      var tr = document.createElement('tr');
       tr.innerHTML = '<td><strong>' + name + '</strong></td><td>' + dose + '</td><td><span class="badge">' + slot + '</span></td><td><span class="badge">Scheduled</span></td><td><button class="btn btn-secondary btn-sm">Edit</button></td>';
       tbody.appendChild(tr);
 
@@ -493,7 +496,7 @@ export function renderConsoleHtml(): string {
     }
 
     function exportData() {
-      const data = {
+      var data = {
         circle: "Margaret's Care Circle",
         exportedAt: new Date().toISOString(),
         adherenceRate: "100%",
@@ -501,9 +504,9 @@ export function renderConsoleHtml(): string {
         tasks: [{ id: "task-401", title: "Pick up blood pressure medication refill", status: "open" }],
         notes: [{ author: "Elena", content: "Mom's knee is feeling much better after physical therapy" }]
       };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      var blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
       a.href = url;
       a.download = "tend-circle-data.json";
       a.click();
@@ -516,36 +519,37 @@ export function renderConsoleHtml(): string {
     }
 
     function showOutput(msg) {
-      const el = document.getElementById('demo-output');
+      var el = document.getElementById('demo-output');
       if (el) {
         el.style.display = 'block';
-        el.innerHTML += "<div style='margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.06);'>&bull; " + msg + "</div>";
+        el.innerHTML += "<div style='margin-bottom: 10px; padding: 10px; background: #ffffff; border-radius: 8px; border: 1px solid #e0e0e0;'>&bull; " + msg + "</div>";
       }
     }
 
     function runStep1() {
-      showOutput("<strong>[VOICE]</strong> \"Alexa, tell Tend I took my morning pills.\"<br/><strong>[SPOKEN]</strong> \"I've logged your morning medication as taken for today. Have a wonderful day.\"");
+      showOutput('<strong>[VOICE]</strong> &ldquo;Alexa, tell Tend I took my morning pills.&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;I&rsquo;ve logged your morning medication as taken for today. Have a wonderful day.&rdquo;');
     }
     function runStep2() {
-      showOutput("<strong>[VOICE]</strong> \"Alexa, tell Tend I'm fine.\"<br/><strong>[SPOKEN]</strong> \"Thank you for checking in. I've let your family care circle know you are doing fine today.\"");
+      showOutput('<strong>[VOICE]</strong> &ldquo;Alexa, tell Tend I&rsquo;m fine.&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;Thank you for checking in. I&rsquo;ve let your family care circle know you are doing fine today.&rdquo;');
     }
     function runStep3() {
-      showOutput("<strong>[VOICE]</strong> \"Alexa, how's Mom doing today?\"<br/><strong>[SPOKEN]</strong> \"Here is Margaret's update: Margaret's pills are taken. Margaret checked in and is doing fine. There is 1 open care task, and an appointment: Dr. Chen Cardiology Follow-up.\"");
+      showOutput('<strong>[VOICE]</strong> &ldquo;Alexa, how&rsquo;s Mom doing today?&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;Here is Margaret&rsquo;s update: Margaret&rsquo;s pills are taken. Margaret checked in and is doing fine. There is 1 open care task, and an appointment: Dr. Chen Cardiology Follow-up.&rdquo;');
     }
     function runStep4() {
-      showOutput("<strong>[VOICE]</strong> \"Alexa, tell Tend to claim the prescription task.\"<br/><strong>[SPOKEN]</strong> \"You have claimed the task: Pick up blood pressure medication refill at CVS. The family care board has been updated.\"");
+      showOutput('<strong>[VOICE]</strong> &ldquo;Alexa, tell Tend to claim the prescription task.&rdquo;<br/><strong>[SPOKEN]</strong> &ldquo;You have claimed the task: Pick up blood pressure medication refill at CVS. The family care board has been updated.&rdquo;');
     }
+
     function runScriptedScenario() {
       showTab('demo');
-      const el = document.getElementById('demo-output');
+      var el = document.getElementById('demo-output');
       if (el) {
         el.style.display = 'block';
-        el.innerHTML = "<div style='margin-bottom:12px; font-weight:600; color:#0066cc;'>▶ Executing Live Hackathon Journey:</div>";
+        el.innerHTML = '<div style="margin-bottom:12px; font-weight:600; color:#0066cc;">&#9654; Executing Live Hackathon Journey:</div>';
         el.scrollIntoView({ behavior: 'smooth' });
         runStep1();
-        setTimeout(runStep2, 400);
-        setTimeout(runStep3, 800);
-        setTimeout(runStep4, 1200);
+        setTimeout(runStep2, 500);
+        setTimeout(runStep3, 1000);
+        setTimeout(runStep4, 1500);
       }
     }
   </script>
